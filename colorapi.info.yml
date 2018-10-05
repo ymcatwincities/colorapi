@@ -1,0 +1,4 @@
+name: 'Color API'
+description: 'Provides a Field API "Color" field, and the low-level TypedData API elements to support it.'
+type: module
+core: '8.x'

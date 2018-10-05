@@ -1,0 +1,6 @@
+parameters:
+  colorapi.service.class: 'Drupal\colorapi\Service\ColorapiService'
+
+services:
+  colorapi.service:
+    class: '%colorapi.service.class%'
