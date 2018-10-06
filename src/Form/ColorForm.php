@@ -4,9 +4,11 @@ namespace Drupal\colorapi\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\colorapi\Plugin\DataType\HexColorInterface;
+use Drupal\Core\Url;
 use Drupal\colorapi\Service\ColorapiServiceInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,6 +26,20 @@ class ColorForm extends EntityForm {
   protected $typedDataManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The module handeler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The Color API service.
    *
    * @var \Drupal\colorapi\DataType\ColorapiServiceInterface
@@ -37,16 +53,24 @@ class ColorForm extends EntityForm {
    *   The entityTypeManager.
    * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
    *   The Typed Data manager.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The current user.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler service.
    * @param \Drupal\colorapi\DataType\ColorapiServiceInterface $colorapiService
    *   The Color API service.
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
     TypedDataManagerInterface $typedDataManager,
+    AccountProxyInterface $currentUser,
+    ModuleHandlerInterface $moduleHandler,
     ColorapiServiceInterface $colorapiService
   ) {
     $this->entityTypeManager = $entityTypeManager;
     $this->typedDataManager = $typedDataManager;
+    $this->currentUser = $currentUser;
+    $this->moduleHandler = $moduleHandler;
     $this->colorapiService = $colorapiService;
   }
 
@@ -57,6 +81,8 @@ class ColorForm extends EntityForm {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('typed_data_manager'),
+      $container->get('current_user'),
+      $container->get('module_handler'),
       $container->get('colorapi.service')
     );
   }
@@ -96,6 +122,14 @@ class ColorForm extends EntityForm {
       '#element_validate' => ['::colorElementValidate'],
     ];
 
+    if ($this->currentUser->hasPermission('administer colors') && !$this->moduleHandler->moduleExists('jquery_colorpicker')) {
+      $url = Url::fromUri('https://www.drupal.org/project/jquery_colorpicker');
+      $form['color']['#description'] .= '<br />' . $this->t(
+        'Install the <a href=":url">JQuery Colorpicker module</a> to enable a color popup for this field.',
+        [':url' => $url->toString()]
+      );
+    }
+
     return $form;
   }
 
@@ -107,7 +141,7 @@ class ColorForm extends EntityForm {
    */
   public function colorElementValidate(array &$element, FormStateInterface $form_state) {
     $hexadecimal_color = $form_state->getValue('color');
-    if (!preg_match(HexColorInterface::HEXADECIMAL_COLOR_REGEX, $hexadecimal_color)) {
+    if (!$this->colorapiService->isValidHexadecimalColorString($hexadecimal_color)) {
       $form_state->setError($element, $this->t('%value is not a valid hexadecimal color string. Hexadecimal color strings are in the format #XXXXXX where X is a hexadecimal character (0-9, a-f).', ['%value' => $hexadecimal_color]));
     }
   }

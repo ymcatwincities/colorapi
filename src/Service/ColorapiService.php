@@ -2,10 +2,19 @@
 
 namespace Drupal\colorapi\Service;
 
+use Drupal\colorapi\Plugin\DataType\HexColorInterface;
+
 /**
  * Service class for the Color API module.
  */
 class ColorapiService implements ColorapiServiceInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isValidHexadecimalColorString($string) {
+    return preg_match(HexColorInterface::HEXADECIMAL_COLOR_REGEX, $string);
+  }
 
   /**
    * {@inheritdoc}

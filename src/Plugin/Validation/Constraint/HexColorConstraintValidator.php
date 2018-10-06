@@ -2,20 +2,47 @@
 
 namespace Drupal\colorapi\Plugin\Validation\Constraint;
 
-use Drupal\colorapi\Plugin\Datatype\HexColorInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\colorapi\Service\ColorapiServiceInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Validates the hexadecimal_color constraint.
  */
-class HexColorConstraintValidator extends ConstraintValidator {
+class HexColorConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+
+  /**
+   * The Color API service.
+   *
+   * @var \Drupal\colorapi\Service\ColorApiServiceInterface
+   */
+  protected $colorapiService;
+
+  /**
+   * Constructs a HexColorConstraintalidator object.
+   *
+   * @param \Drupal\colorapi\Service\ColorapiServiceInterface $colorapiService
+   *   THe Color API service.
+   */
+  public function __construct(ColorapiServiceInterface $colorapiService) {
+    $this->colorapiService = $colorapiService;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('colorapi.service')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function validate($items, Constraint $constraint) {
-
     if (is_array($items)) {
       foreach ($items as $item) {
         if (!$this->isHexColorString($item)) {
@@ -25,10 +52,8 @@ class HexColorConstraintValidator extends ConstraintValidator {
         }
       }
     }
-    else {
-      if (!$this->isHexColorString($items)) {
-        $this->context->addViolation($constraint->notValidHexadecimalColorString, ['%value' => (string) $items]);
-      }
+    elseif (!$this->isHexColorString($items)) {
+      $this->context->addViolation($constraint->notValidHexadecimalColorString, ['%value' => (string) $items]);
     }
   }
 
@@ -43,11 +68,7 @@ class HexColorConstraintValidator extends ConstraintValidator {
    *   is not.
    */
   private function isHexColorString($value) {
-    if (is_string($value)) {
-      return preg_match(HexColorInterface::HEXADECIMAL_COLOR_REGEX, $value);
-    }
-
-    return FALSE;
+    return $this->colorapiService->isValidHexadecimalColorString($value);
   }
 
 }
