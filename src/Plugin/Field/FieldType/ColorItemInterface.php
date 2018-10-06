@@ -35,7 +35,7 @@ interface ColorItemInterface extends FieldItemInterface {
    * @param array $color
    *   An array of values to be set for the color. Values will be set based on
    *   the keys:
-   *      - hexadecimal: The hexidecimal color string representing the color.
+   *      - hexadecimal: The hexadecimal color string representing the color.
    *      - rgb: An array containing the following values:
    *         - red: The value for the RGB "red". An integer between 0 and 255.
    *         - green: The value for the RGB "green". An integer between 0 and
@@ -75,10 +75,10 @@ interface ColorItemInterface extends FieldItemInterface {
   public function setHexadecimal($color, $notify = TRUE);
 
   /**
-   * Retrieve the hexidecimal color string representation of the color.
+   * Retrieve the hexadecimal color string representation of the color.
    *
    * @return string
-   *   The hexidecimal string representation of the color.
+   *   The hexadecimal string representation of the color.
    */
   public function getHexadecimal();
 

@@ -22,10 +22,10 @@ interface ColorInterface extends ComplexDataInterface {
   public function setHexadecimal($color, $notify = TRUE);
 
   /**
-   * Retrieve the hexidecimal color string representation of the color.
+   * Retrieve the hexadecimal color string representation of the color.
    *
    * @return string
-   *   The hexidecimal string representation of the color.
+   *   The hexadecimal string representation of the color.
    */
   public function getHexadecimal();
 

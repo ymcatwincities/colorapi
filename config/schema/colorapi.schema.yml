@@ -1,3 +1,28 @@
+colorapi.settings:
+  type: config_object
+  label: 'Colora API module settings'
+  mapping:
+    enable_color_field:
+      type: boolean
+      label: 'Whether or not the Color Field should be enabled'
+    enable_color_entity:
+      type: boolean
+      label: 'Whether or not the Color Entity should be enabled'
+
+colorapi.colorapi_color.*:
+  type: config_entity
+  label: 'Color entity configuration'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    color:
+      type: hexadecimal_color
+      label: 'The color, in hexadecimal format'
+
 field.value.colorapi_color_field:
   type: mapping
   label: 'Color Field Default value'
