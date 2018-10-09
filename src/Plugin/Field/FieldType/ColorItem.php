@@ -27,12 +27,12 @@ class ColorItem extends FieldItemBase implements ColorItemInterface {
         'name' => [
           'type' => 'varchar',
           'length' => 255,
-          'not null' => TRUE,
+          'not null' => FALSE,
         ],
         'color' => [
           'type' => 'varchar',
           'length' => 7,
-          'not null' => TRUE,
+          'not null' => FALSE,
         ],
       ],
     ];

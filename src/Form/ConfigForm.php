@@ -4,6 +4,7 @@ namespace Drupal\colorapi\Form;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,13 +22,26 @@ class ConfigForm extends ConfigFormBase {
   protected $entityFieldManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a ConfigForm Entity.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    *   The entity field manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
    */
-  public function __construct(EntityFieldManagerInterface $entityFieldManager) {
+  public function __construct(
+    EntityFieldManagerInterface $entityFieldManager,
+    EntityTypeManagerInterface $entityTypeManager
+  ) {
     $this->entityFieldManager = $entityFieldManager;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -35,7 +49,8 @@ class ConfigForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -82,7 +97,7 @@ class ConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('enable_color_entity') && \Drupal::entityTypeManager()->getStorage('colorapi_color')->hasData()) {
+    if ($this->entityTypeManager->hasDefinition('colorapi_color') && !$form_state->getValue('enable_color_entity') && $this->entityTypeManager->getStorage('colorapi_color')->hasData()) {
       $form_state->setError($form['enable_color_entity'], $this->t('You have Color entity data in the database, and must delete the content before you can disable the Color entity type.'));
     }
 
