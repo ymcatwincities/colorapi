@@ -4,6 +4,7 @@ namespace Drupal\colorapi\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\colorapi\Plugin\Field\FieldType\ColorItem;
 
 /**
  * Base class for Color API Color Field Formatters.
@@ -48,18 +49,27 @@ abstract class ColorapiDisplayFormatterBase extends FormatterBase {
   }
 
   /**
-   * Adds the human-readable name value to the output.
+   * Adds the human-readable color name to the output.
    *
    * Note: Only added if the formatter settings are set to display the
-   * human-readable name.
+   * human-readable name, and a value exists for the name.
+   *
+   * @param array $element
+   *   The field formatter render array element the name is to be added to.
+   * @param int $delta
+   *   The index of the element within a multivalue field.
+   * @param \Drupal\colorapi\Plugin\Field\FieldType\ColorItem $item
+   *   The item being viewed.
    */
-  protected function addHumanReadableNameToElement(array &$element, $delta, $item) {
-    if ($this->getSetting('display_name')) {
-      $element[$delta]['name'] = [
-        '#prefix' => '<p class="color_name">',
-        '#suffix' => '</p>',
-        '#markup' => $this->t('Color: @color', ['@color' => $item->getColorName()]),
-      ];
+  protected function addHumanReadableNameToElement(array &$element, $delta, ColorItem $item) {
+    if ($this->getSetting('display_name') && $color_name = $item->getColorName()) {
+      if (strlen($color_name)) {
+        $element[$delta]['name'] = [
+          '#prefix' => '<p class="color_name">',
+          '#suffix' => '</p>',
+          '#markup' => $this->t('Color: @color', ['@color' => $item->getColorName()]),
+        ];
+      }
     }
   }
 
