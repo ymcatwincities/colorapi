@@ -90,7 +90,7 @@ class Color extends ConfigEntityBase implements ColorInterface {
    */
   public function getGreen() {
     if ($color = $this->get('color')) {
-      return \Drupal::service('colorapi.service')->hexToRgb($color, 'blue');
+      return \Drupal::service('colorapi.service')->hexToRgb($color, 'green');
     }
   }
 
@@ -99,7 +99,7 @@ class Color extends ConfigEntityBase implements ColorInterface {
    */
   public function getBlue() {
     if ($color = $this->get('color')) {
-      return \Drupal::service('colorapi.service')->hexToRgb($color, 'green');
+      return \Drupal::service('colorapi.service')->hexToRgb($color, 'blue');
     }
   }
 
