@@ -7,10 +7,13 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
 /**
  * Provides the Color Typed Data type.
  *
- * This data type is a wrapper for colors. It holds the value in both
- * hexadecimal color format #XXXXXX, where X is a hexadecimal character
- * (0-9, a-f), and RGB format, where red, blue and green each have a value
- * between 0 and 255.
+ * This data type is a wrapper for colors. It has the following properties:
+ *   - hexadecimal: A Simple Data hexadecimal_color object holding the color in
+ *     the format #XXXXXX, where X is a hexadecimal character (0-9 or a-f).
+ *   - rgb: A complex data object with the properties:
+ *     - red: an integer with a value between 0 and 255.
+ *     - green: an integer with a value between 0 and 255.
+ *     - blue: an integer with a value between 0 and 255.
  *
  * @DataType(
  *   id = "colorapi_color",
