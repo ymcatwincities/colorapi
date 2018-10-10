@@ -7,7 +7,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
 /**
  * Definition class for Typed Data API Color Complex Data types.
  */
-class ColorDefinition extends MapDataDefinition implements ColorDefinitionInterface {
+class ColorDataDefinition extends MapDataDefinition {
 
   /**
    * {@inheritdoc}
@@ -28,41 +28,6 @@ class ColorDefinition extends MapDataDefinition implements ColorDefinitionInterf
     }
 
     return $this->propertyDefinitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getHexadecimal() {
-    return $this->get('color')->get('hexadecimal')->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRgb() {
-    return $this->get('color')->get('rgb');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRed() {
-    return $this->get('color')->get('rgb')->get('red')->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getGreen() {
-    return $this->get('color')->get('rgb')->get('green')->getValue();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBlue() {
-    $this->get('color')->get('rgb')->get('blue')->getValue();
   }
 
 }

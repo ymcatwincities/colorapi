@@ -16,7 +16,7 @@ use Drupal\Core\TypedData\Plugin\DataType\Map;
  *   id = "colorapi_color",
  *   label = @Translation("Color"),
  *   description = @Translation("A Complex Data object containing a color in hexadecimal and RGB formats"),
- *   definition_class = "\Drupal\colorapi\TypedData\Definition\ColorDefinition"
+ *   definition_class = "\Drupal\colorapi\TypedData\Definition\ColorDataDefinition"
  * )
  */
 class ColorData extends Map implements ColorInterface {
