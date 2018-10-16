@@ -4,7 +4,6 @@ namespace Drupal\colorapi\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Provides the Color field.
@@ -51,15 +50,27 @@ class ColorItem extends FieldItemBase implements ColorItemInterface {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-
+    // Retrieve the Typed Data Plugin Manager. This will be used to retrieve
+    // the data definitions for the properties of this Field type.
     $typed_data_manager = \Drupal::typedDataManager();
 
-    $properties['name'] = DataDefinition::create('string')
+    // The Plugin ID of the Typed Data data type the name property will store:
+    $string_data_type = 'string';
+    // Retrieve the data definition for String Simple Data types.
+    $string_definition_info = $typed_data_manager->getDefinition($string_data_type);
+    // Use the definition class for the data type to create a new String object
+    // and set some values on it.
+    $properties['name'] = $string_definition_info['definition_class']::create($string_data_type)
       ->setLabel(t('Name'))
       ->setDescription(t('The human readable name of the color'));
 
-    $color_definition_info = $typed_data_manager->getDefinition('colorapi_color');
-    $properties['color'] = $color_definition_info['definition_class']::create('colorapi_color')
+    // The Plugin ID of the Typed Data data type the color property will store:
+    $color_data_type = 'colorapi_color';
+    // Retrieve the data definition for Color complex Data types.
+    $color_definition_info = $typed_data_manager->getDefinition($color_data_type);
+    // Use the definition class for the data type to create a new Color object
+    // and set some values on it.
+    $properties['color'] = $color_definition_info['definition_class']::create($color_data_type)
       ->setLabel(t('Color'))
       ->setDescription(t('The color, in hexadecimal and RGB format.'))
       ->setRequired(TRUE);
