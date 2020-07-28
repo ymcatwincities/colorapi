@@ -154,12 +154,12 @@ class ColorForm extends EntityForm {
     $status = $color_entity->save();
 
     if ($status) {
-      drupal_set_message($this->t('Saved the Color: %label.', [
+      $this->messenger()->addStatus($this->t('Saved the Color: %label.', [
         '%label' => $color_entity->label(),
       ]));
     }
     else {
-      drupal_set_message($this->t('The Color %label was not saved.', [
+      $this->messenger()->addStatus($this->t('The Color %label was not saved.', [
         '%label' => $color_entity->label(),
       ]));
     }
