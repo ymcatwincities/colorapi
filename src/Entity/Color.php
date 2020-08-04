@@ -24,6 +24,11 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "id" = "id",
  *     "label" = "label"
  *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
+ *     "color"
+ *   },
  *   links = {
  *     "edit-form" = "/admin/config/system/colors/{colorapi_color}",
  *     "delete-form" = "/admin/config/system/colors/{colorapi_color}/delete"
